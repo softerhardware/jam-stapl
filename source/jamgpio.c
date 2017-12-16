@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#define BCM2708_PERI_BASE        0x20000000
+#define BCM2708_PERI_BASE        0x3F000000
 #define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
 #define GPIO_LEN                 0xB4 // need only to map B4 registers
 
@@ -23,14 +23,14 @@ static const unsigned int GPFSEL0 = 0;
 static const unsigned int GPFSEL1 = 1;
 static const unsigned int GPFSEL2 = 2;
 
-#define TCK 7  //bcm GPIO 7, P1 pin 26 (out)
-#define TDI 8  //bcm GPIO 8, P1 pin 24 (out)
-#define TMS 25 //bcm GPIO 25, P1 pin 22 (out)
-#define TDO 24 //bcm GPIO 24, P1 pin 18 (in)
-#define TCK_P1PIN 26 //bcm GPIO 7, P1 pin 26 (out)
-#define TDI_P1PIN 24 //bcm GPIO 8, P1 pin 24 (out)
-#define TMS_P1PIN 22 //bcm GPIO 25, P1 pin 22 (out)
-#define TDO_P1PIN 18 //bcm GPIO 24, P1 pin 18 (in)
+#define TCK 21 //bcm GPIO 21, P1 pin 40 (out)
+#define TDI 12 //bcm GPIO 12, P1 pin 32 (out)
+#define TMS 16 //bcm GPIO 16, P1 pin 36 (out)
+#define TDO 20 //bcm GPIO 20, P1 pin 38 (in)
+#define TCK_P1PIN 40 //bcm GPIO 7, P1 pin 26 (out)
+#define TDI_P1PIN 32 //bcm GPIO 8, P1 pin 24 (out)
+#define TMS_P1PIN 36 //bcm GPIO 25, P1 pin 22 (out)
+#define TDO_P1PIN 38 //bcm GPIO 24, P1 pin 18 (in)
 
 #include "jamgpio.h"
 
@@ -185,18 +185,26 @@ void gpio_init_jtag()
 	printf("[RPi]   TDI on BCM GPIO %d P1 pin %d\n", TDI, TDI_P1PIN);
 	printf("[RPi]   TDO on BCM GPIO %d P1 pin %d\n", TDO, TDO_P1PIN);
 	printf("[RPi]   TMS on BCM GPIO %d P1 pin %d\n", TMS, TMS_P1PIN);
+	
+	// safe guard for other inputs
+	gpio_setPinDir(5, INPUT);
+	gpio_setPinDir(6, INPUT);
+	gpio_setPinDir(13, INPUT);
+	gpio_setPinDir(19, INPUT);
+	gpio_setPinDir(26, INPUT);
 }
 
 void gpio_close_jtag()
 {
 	/* Put the used I/O pins back in a safe state */
-	gpio_writePin(TCK, LOW);
+	gpio_writePin(TCK, HIGH);
 	gpio_writePin(TDI, LOW);
 	gpio_writePin(TMS, LOW);
-	gpio_setPinDir(TCK, INPUT);
+	gpio_setPinDir(TCK, OUTPUT);
 	gpio_setPinDir(TDI, INPUT);
 	gpio_setPinDir(TMS, INPUT);
 	gpio_setPinDir(TDO, INPUT);
+	printf("[RPi] closed JTAG\n");
 }
 
 void gpio_set_tdi()

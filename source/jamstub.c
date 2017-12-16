@@ -389,7 +389,9 @@ int jam_jtag_io(int tms, int tdi, int read_tdo)
 		}
 
 		// Pulse TCK
+		delay_loop(10);
 		gpio_set_tck();
+		delay_loop(10);
 		gpio_clear_tck();
 #else
 		/* parallel port interface not available */
@@ -397,7 +399,8 @@ int jam_jtag_io(int tms, int tdi, int read_tdo)
 #endif
 	}
 
-	if (tck_delay != 0) delay_loop(tck_delay);
+	//if (tck_delay != 0) delay_loop(tck_delay);
+	//delay_loop(500);
 
 	return (tdo);
 }
