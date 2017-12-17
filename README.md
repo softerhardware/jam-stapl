@@ -59,7 +59,7 @@ sudo ./jam -aconfigure <yourjamfile.jam>
 
 Execute on the Raspberry Pi:
 ```
-sudo ./jam -aprogram <yourjamfile.jam?
+sudo ./jam -aprogram <yourjamfile.jam>
 ```
 
 If there are any errors, check your connection between the Raspberry Pi and Hermes-Lite 2.0. This connection must be solid for the programming to be successful. Also, try again as subsequent attempts may not experience errors.
